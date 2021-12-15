@@ -20,8 +20,8 @@ import tensorflow as tf
 # DATA_DIR = sys.argv[1]
 # CLASS_NUM = int(sys.argv[2])
 # TRAIN_ROUND = int(sys.argv[3])
-DATA_DIR = '~/reaserch/DeepTraffic/2.encrypted_traffic_classification/3.PerprocessResults/12class/SessionL7'
-CLASS_NUM = 12
+DATA_DIR = '/12class/SessionL7'
+CLASS_NUM = 6
 TRAIN_ROUND = 20000
 
 dict_2class = {0: 'Novpn', 1: 'Vpn'}
@@ -108,12 +108,12 @@ h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 w_fc2 = weight_variable([1024, CLASS_NUM])
 b_fc2 = bias_variable([CLASS_NUM])
 
-# From Site1997: This would cause nan or 0 gradient if "tf.matmul(h_fc1_drop, w_fc2) + b_fc2" is all zero or nan, 
+# From Site1997: This would cause nan or 0 gradient if "tf.matmul(h_fc1_drop, w_fc2) + b_fc2" is all zero or nan,
 # so when the training iteration is big enough, all weights could suddenly became 0.
 # Use tf.nn.softmax_cross_entropy_with_logits instead. It handles the extreme case safely.
-# y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, w_fc2) + b_fc2)
+y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, w_fc2) + b_fc2)
 
-tf.nn.softmax_cross_entropy_with_logits(logits=tf.matmul(h_fc1_drop, w_fc2) + b_fc2)
+tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=tf.matmul(h_fc1_drop, w_fc2) + b_fc2)
 
 # define var&op of training&testing
 actual_label = tf.argmax(y_, 1)
